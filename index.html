@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>JHP Finance</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1220;color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:22px}
+header{padding:18px 0 24px}
+h1{font-size:29px;margin:0;color:#facc15}
+.sub{color:#94a3b8;margin-top:7px}
+.card{background:#172235;border:1px solid #29374c;border-radius:17px;padding:19px;margin-bottom:15px}
+.label{font-size:13px;color:#94a3b8}
+.amount{font-size:32px;font-weight:750;margin:9px 0}
+.gold{color:#facc15}
+.progress{height:11px;background:#334155;border-radius:20px;overflow:hidden;margin:14px 0}
+.bar{height:100%;background:#eab308;width:0%;border-radius:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.small{font-size:20px;font-weight:700;margin-top:9px}
+input,select{width:100%;padding:13px;border-radius:10px;border:1px solid #475569;background:#0f1b2d;color:white;margin:7px 0 14px;font-size:16px}
+button{background:#eab308;color:#111827;border:0;border-radius:10px;padding:14px;font-weight:750;width:100%;font-size:15px}
+h2{font-size:17px;margin:0 0 16px}
+.entry{padding:12px 0;border-bottom:1px solid #334155;display:flex;justify-content:space-between}
+.muted{color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+<h1>JHP FINANCE</h1>
+<div class="sub">Tu dinero. Tus objetivos. Tu futuro.</div>
+</header>
+
+<div class="card">
+<div class="label">AHORRO ACTUAL</div>
+<div class="amount gold" id="savings">4.000 €</div>
+<div class="label">Objetivo: 14.000 € · Febrero 2027</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="label" id="percentage">0% completado</div>
+</div>
+
+<div class="grid">
+<div class="card">
+<div class="label">OBJETIVO</div>
+<div class="small">14.000 €</div>
+</div>
+<div class="card">
+<div class="label">MERCEDES PREVISTO</div>
+<div class="small gold">7.000 €</div>
+</div>
+</div>
+
+<div class="card">
+<h2>¿Cuánto te falta?</h2>
+<div class="amount" id="remaining">10.000 €</div>
+<div class="label">Para alcanzar tu objetivo de ahorro</div>
+</div>
+
+<div class="card">
+<h2>Registrar movimiento</h2>
+<label class="label">Tipo de movimiento</label>
+<select id="type"><option value="income">Ingreso</option><option value="expense">Gasto</option></select>
+<label class="label">Concepto</label>
+<input id="concept" placeholder="Ej. Nómina, gasolina...">
+<label class="label">Cantidad (€)</label>
+<input id="amount" type="number" min="0.01" step="0.01" placeholder="0">
+<button onclick="add()">Guardar movimiento</button>
+</div>
+
+<div class="card">
+<h2>Historial</h2>
+<div id="history" class="muted">Todavía no hay movimientos.</div>
+</div>
+
+<div class="muted" style="text-align:center;padding:20px">JHP Finance · 2026</div>
+
+<script>
+let savings=4000;
+let movements=[];
+const euro=n=>n.toLocaleString('es-ES',{style:'currency',currency:'EUR'});
+function render(){
+document.getElementById('savings').textContent=euro(savings);
+let pct=Math.min(100,savings/14000*100);
+document.getElementById('bar').style.width=pct+'%';
+document.getElementById('percentage').textContent=pct.toFixed(1)+'% completado';
+document.getElementById('remaining').textContent=euro(Math.max(0,14000-savings));
+document.getElementById('history').innerHTML=movements.length?movements.map(m=>'<div class="entry"><span>'+m.name+'<br><span class="muted">'+m.date+'</span></span><b style="color:'+(m.type==='income'?'#4ade80':'#f87171')+'">'+(m.type==='income'?'+':'-')+euro(m.value)+'</b></div>').join(''):'Todavía no hay movimientos.';
+}
+function add(){
+let type=document.getElementById('type').value;
+let name=document.getElementById('concept').value.trim();
+let value=Number(document.getElementById('amount').value);
+if(!name||!Number.isFinite(value)||value<=0){alert('Introduce un concepto y una cantidad válida.');return}
+if(type==='expense'&&value>savings){alert('No tienes suficiente ahorro registrado.');return}
+savings+=type==='income'?value:-value;
+movements.unshift({type,name,value,date:new Date().toLocaleDateString('es-ES')});
+localStorage.setItem('jhp',JSON.stringify({savings,movements}));
+document.getElementById('concept').value='';
+document.getElementById('amount').value='';
+render();
+}
+try{let saved=JSON.parse(localStorage.getItem('jhp'));if(saved){savings=saved.savings;movements=saved.movements||[]}}catch(e){}
+render();
+</script>
+</body>
+</html>
