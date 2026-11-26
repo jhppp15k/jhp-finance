@@ -1,30 +1,55 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101827">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
 <title>JHP Finance</title>
 <style>
+:root{color-scheme:dark;--bg:#0b1220;--card:#172235;--line:#29374c;--muted:#94a3b8;--gold:#facc15;--green:#4ade80;--blue:#60a5fa;--purple:#c084fc;--orange:#fb923c;--red:#f87171}
 *{box-sizing:border-box}
-body{margin:0;background:#0b1220;color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:22px}
-header{padding:18px 0 24px}
-h1{font-size:29px;margin:0;color:#facc15}
-.sub{color:#94a3b8;margin-top:7px}
-.card{background:#172235;border:1px solid #29374c;border-radius:17px;padding:19px;margin-bottom:15px}
-.label{font-size:13px;color:#94a3b8}
-.amount{font-size:32px;font-weight:750;margin:9px 0}
-.gold{color:#facc15}
-.progress{height:11px;background:#334155;border-radius:20px;overflow:hidden;margin:14px 0}
-.bar{height:100%;background:#eab308;width:0%;border-radius:20px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.small{font-size:20px;font-weight:700;margin-top:9px}
-input,select{width:100%;padding:13px;border-radius:10px;border:1px solid #475569;background:#0f1b2d;color:white;margin:7px 0 14px;font-size:16px}
-button{background:#eab308;color:#111827;border:0;border-radius:10px;padding:14px;font-weight:750;width:100%;font-size:15px}
-h2{font-size:17px;margin:0 0 16px}
-.entry{padding:12px 0;border-bottom:1px solid #334155;display:flex;justify-content:space-between}
-.muted{color:#94a3b8;font-size:12px}
+body{margin:0 auto;padding:18px 15px 35px;max-width:760px;background:var(--bg);color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:12px 2px 20px}
+h1{margin:0;color:var(--gold);font-size:27px}
+.sub,.muted,.label{color:var(--muted)}
+.sub{font-size:14px;margin-top:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:17px;margin-bottom:14px}
+h2{font-size:17px;margin:0 0 14px}
+.label{font-size:12px}
+.amount{font-size:32px;font-weight:800;margin:8px 0}
+.gold{color:var(--gold)}
+.green{color:var(--green)}
+.blue{color:var(--blue)}
+.purple{color:var(--purple)}
+.orange{color:var(--orange)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#101b2d;border-radius:12px;padding:13px;min-width:0}
+.value{font-size:19px;font-weight:750;margin-top:7px;overflow-wrap:anywhere}
+.progress{height:10px;background:#334155;border-radius:20px;overflow:hidden;margin:12px 0}
+.bar{height:100%;background:var(--gold);width:0%}
+input,select,button{font:inherit}
+input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #475569;background:#0f1b2d;color:white;margin:6px 0 12px;font-size:16px}
+button{width:100%;padding:13px;border:0;border-radius:10px;background:var(--gold);color:#111827;font-weight:800;cursor:pointer}
+button.secondary{background:#26364d;color:#e2e8f0;border:1px solid #40516a}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:7px 0}
+.row strong{text-align:right}
+.muted{font-size:12px;line-height:1.45}
+.divider{height:1px;background:var(--line);margin:13px 0}
+.tabs{display:flex;gap:7px;overflow-x:auto;padding:2px 0 14px;position:sticky;top:0;background:var(--bg);z-index:2}
+.tabs button{width:auto;white-space:nowrap;padding:9px 12px;background:#172235;color:#cbd5e1;border:1px solid var(--line)}
+.tabs button.active{background:var(--gold);color:#111827}
+.panel{display:none}
+.panel.active{display:block}
+.entry{padding:12px 0;border-bottom:1px solid #334155;display:flex;justify-content:space-between;gap:12px}
+.entry:last-child{border:0}
+.entry span:first-child{overflow-wrap:anywhere}
+.entry b{white-space:nowrap}
+.pill{font-size:11px;background:#26364d;border-radius:20px;padding:5px 9px;color:#cbd5e1}
+canvas{width:100%;height:245px;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px 13px;margin-top:12px}
+.legend span{font-size:11px;color:#cbd5e1}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+@media(min-width:600px){body{padding:24px}.amount{font-size:36px}}
 </style>
 </head>
 <body>
@@ -33,76 +58,349 @@ h2{font-size:17px;margin:0 0 16px}
 <div class="sub">Tu dinero. Tus objetivos. Tu futuro.</div>
 </header>
 
+<nav class="tabs">
+<button class="active" data-tab="inicio">Inicio</button>
+<button data-tab="movimientos">Movimientos</button>
+<button data-tab="grafica">Gráfica</button>
+<button data-tab="objetivos">Objetivos</button>
+<button data-tab="patrimonio">Patrimonio</button>
+</nav>
+
+<section id="inicio" class="panel active">
 <div class="card">
-<div class="label">AHORRO ACTUAL</div>
-<div class="amount gold" id="savings">4.000 €</div>
-<div class="label">Objetivo: 14.000 € · Febrero 2027</div>
+<div class="label">PATRIMONIO TOTAL ESTIMADO</div>
+<div class="amount gold" id="total">4.000,00 €</div>
+<div class="muted">Efectivo + banco + VUAA + otros activos. Mercedes previsto aparte.</div>
+<div class="divider"></div>
+<div class="row"><span class="label">Dinero disponible</span><strong id="available">244,19 €</strong></div>
+<div class="row"><span class="label">Inversión VUAA</span><strong id="vuaa">3.755,81 €</strong></div>
+<div class="row"><span class="label">Mercedes previsto</span><strong class="orange" id="mercedesHome">7.000,00 €</strong></div>
+</div>
+
+<div class="card">
+<div class="row"><h2 style="margin:0">Objetivo principal</h2><span class="pill" id="goalDateText">Febrero 2027</span></div>
+<div class="amount" id="goalCurrent">244,19 €</div>
+<div class="label" id="goalText">Objetivo: 14.000 € · solo efectivo y banco</div>
 <div class="progress"><div class="bar" id="bar"></div></div>
-<div class="label" id="percentage">0% completado</div>
+<div class="row"><span class="label" id="pct">1,7 % completado</span><strong id="left">Faltan 13.755,81 €</strong></div>
 </div>
 
 <div class="grid">
-<div class="card">
-<div class="label">OBJETIVO</div>
-<div class="small">14.000 €</div>
-</div>
-<div class="card">
-<div class="label">MERCEDES PREVISTO</div>
-<div class="small gold">7.000 €</div>
-</div>
+<div class="stat"><div class="label">EFECTIVO</div><div class="value green" id="cashHome">0,00 €</div></div>
+<div class="stat"><div class="label">BANCO</div><div class="value blue" id="bankHome">0,00 €</div></div>
+<div class="stat"><div class="label">PARTICIPACIONES VUAA</div><div class="value purple" id="sharesHome">29,40953686</div></div>
+<div class="stat"><div class="label">GANANCIA/PÉRDIDA</div><div class="value" id="profitHome">+5,81 €</div></div>
 </div>
 
-<div class="card">
-<h2>¿Cuánto te falta?</h2>
-<div class="amount" id="remaining">10.000 €</div>
-<div class="label">Para alcanzar tu objetivo de ahorro</div>
+<div class="card" style="margin-top:14px">
+<div class="row"><span class="label">Dinero por asignar</span><strong id="unassignedHome">244,19 €</strong></div>
+<div class="row"><span class="label">Fecha</span><strong id="today">—</strong></div>
 </div>
+</section>
 
+<section id="movimientos" class="panel">
 <div class="card">
 <h2>Registrar movimiento</h2>
-<label class="label">Tipo de movimiento</label>
-<select id="type"><option value="income">Ingreso</option><option value="expense">Gasto</option></select>
-<label class="label">Concepto</label>
-<input id="concept" placeholder="Ej. Nómina, gasolina...">
-<label class="label">Cantidad (€)</label>
-<input id="amount" type="number" min="0.01" step="0.01" placeholder="0">
-<button onclick="add()">Guardar movimiento</button>
+<label class="label">Tipo</label>
+<select id="type">
+<option value="income">Ingreso</option>
+<option value="expense">Gasto</option>
+<option value="transfer">Traspaso entre cuentas</option>
+</select>
+<label class="label">Cuenta de origen / destino</label>
+<select id="account">
+<option value="cash">Efectivo</option>
+<option value="bank">Banco</option>
+</select>
+<div id="targetWrap" style="display:none">
+<label class="label">Cuenta de destino</label>
+<select id="target">
+<option value="bank">Banco</option>
+<option value="cash">Efectivo</option>
+</select>
 </div>
-
+<label class="label">Concepto</label>
+<input id="concept" placeholder="Nómina, gasolina, comida...">
+<label class="label">Cantidad (€)</label>
+<input id="amount" type="number" min=".01" step=".01" placeholder="0,00">
+<button id="add">Guardar movimiento</button>
+<p class="muted">Ingresos y gastos actualizan la cuenta seleccionada. Los traspasos no cuentan como ingreso ni gasto.</p>
+</div>
 <div class="card">
 <h2>Historial</h2>
 <div id="history" class="muted">Todavía no hay movimientos.</div>
 </div>
+</section>
 
-<div class="muted" style="text-align:center;padding:20px">JHP Finance · 2026</div>
+<section id="grafica" class="panel">
+<div class="card">
+<h2>Evolución diaria</h2>
+<p class="muted">Se guarda una fotografía diaria al abrir la página. No se puede reconstruir el historial anterior a la instalación de esta versión.</p>
+<canvas id="chart" width="700" height="300"></canvas>
+<div class="legend">
+<span><i class="dot" style="background:#4ade80"></i>Efectivo</span>
+<span><i class="dot" style="background:#60a5fa"></i>Banco</span>
+<span><i class="dot" style="background:#c084fc"></i>VUAA</span>
+<span><i class="dot" style="background:#facc15"></i>Patrimonio</span>
+<span><i class="dot" style="background:#fb923c"></i>Objetivo disponible</span>
+</div>
+<div class="row" style="margin-top:14px"><span class="label">Días registrados</span><strong id="snapCount">1</strong></div>
+<button class="secondary" id="redraw">Actualizar gráfica</button>
+</div>
+</section>
+
+<section id="objetivos" class="panel">
+<div class="card">
+<h2>Objetivo de ahorro editable</h2>
+<label class="label">Importe objetivo (€)</label>
+<input id="goalInput" type="number" min="1" step=".01">
+<label class="label">Fecha límite</label>
+<input id="goalDate" type="date">
+<button id="saveGoal">Guardar objetivo</button>
+<p class="muted">Puedes modificar el importe y la fecha cuando quieras. El progreso solo cuenta efectivo y banco, nunca inversiones ni el Mercedes previsto.</p>
+</div>
+<div class="card">
+<h2>Mercedes previsto</h2>
+<label class="label">Importe estimado (€)</label>
+<input id="mercedesInput" type="number" min="0" step=".01">
+<label class="label">Fecha estimada</label>
+<input id="mercedesDate" type="date">
+<button id="saveMercedes">Guardar previsión</button>
+<p class="muted">No se suma al patrimonio real ni al objetivo hasta que recibas el dinero y registres el ingreso.</p>
+</div>
+</section>
+
+<section id="patrimonio" class="panel">
+<div class="card">
+<h2>Efectivo y banco</h2>
+<p class="muted">Los 4.000 € iniciales incluyen 3.755,81 € de VUAA. Los 244,19 € restantes quedan por asignar porque todavía no sabemos cuánto tienes en efectivo y cuánto en el banco.</p>
+<label class="label">Efectivo (€)</label>
+<input id="cashInput" type="number" min="0" step=".01">
+<label class="label">Banco (€)</label>
+<input id="bankInput" type="number" min="0" step=".01">
+<label class="label">Dinero por asignar (€)</label>
+<input id="unassignedInput" type="number" min="0" step=".01">
+<button id="saveBalances">Guardar saldos</button>
+</div>
+
+<div class="card">
+<h2>Inversión Revolut · VUAA</h2>
+<div class="row"><span class="label">Participaciones</span><strong id="shares">29,40953686</strong></div>
+<div class="row"><span class="label">Valor de posición</span><strong id="investment">3.755,81 €</strong></div>
+<div class="row"><span class="label">Coste de compra estimado</span><strong id="cost">3.750,00 €</strong></div>
+<div class="row"><span class="label">Ganancia/pérdida</span><strong id="profit">+5,81 €</strong></div>
+<div class="divider"></div>
+<label class="label">Participaciones VUAA</label>
+<input id="sharesInput" type="number" min="0" step=".00000001">
+<label class="label">Coste total de compra (€)</label>
+<input id="costInput" type="number" min="0" step=".01">
+<label class="label">Valor actual manual de tu posición (€)</label>
+<input id="manualValue" type="number" min="0" step=".01">
+<button class="secondary" id="saveInvestment">Guardar datos de inversión</button>
+<button id="updateQuote" style="margin-top:9px">Actualizar cotización VUAA</button>
+<div class="muted" id="quoteStatus" style="margin-top:9px">Cotización pública pendiente de consulta.</div>
+<p class="muted">Se intenta consultar el precio público de VUAA en EUR (VUAA.DE), no tu cuenta Revolut. La cotización puede diferir de Revolut. Si el servicio bloquea la consulta, se conserva el último valor y puedes introducir el total manualmente. El valor se calcula multiplicando participaciones por cotización.</p>
+</div>
+
+<div class="card">
+<h2>Otros activos</h2>
+<label class="label">Otros activos / inversiones (€)</label>
+<input id="otherInput" type="number" min="0" step=".01">
+<button class="secondary" id="saveOther">Guardar otros activos</button>
+</div>
+
+<div class="card">
+<h2>Copia de seguridad</h2>
+<button class="secondary" id="export">Exportar copia JSON</button>
+<label class="label" style="display:block;margin-top:14px">Restaurar copia JSON</label>
+<input id="importFile" type="file" accept="application/json">
+<button class="secondary" id="import">Importar copia</button>
+<p class="muted">Los datos se guardan en este navegador y no se sincronizan entre dispositivos. Exporta copias periódicamente.</p>
+</div>
+</section>
+
+<footer class="muted" style="text-align:center;padding:15px">JHP Finance · 2026</footer>
 
 <script>
-let savings=4000;
-let movements=[];
-const euro=n=>n.toLocaleString('es-ES',{style:'currency',currency:'EUR'});
+const KEY='jhpFinance2',OLD='jhp',today=()=>new Date().toISOString().slice(0,10),n=x=>Number(x)||0;
+const eur=x=>n(x).toLocaleString('es-ES',{style:'currency',currency:'EUR'});
+const base={cash:0,bank:0,unassigned:244.19,goal:14000,goalDate:'2027-02-28',mercedes:7000,mercedesDate:'2027-02-28',shares:29.40953686,cost:3750,investment:3755.81,quote:127.7,other:0,movements:[],snapshots:[]};
+
+function load(){
+try{
+let s=localStorage.getItem(KEY);
+if(s)return {...base,...JSON.parse(s)};
+let old=JSON.parse(localStorage.getItem(OLD)||'null');
+if(old){
+let available=Math.max(0,(Number(old.savings)||4000)-3755.81);
+return {...base,unassigned:available,movements:Array.isArray(old.movements)?old.movements:[]};
+}
+}catch(e){}
+return {...base};
+}
+let S=load();
+function avail(){return n(S.cash)+n(S.bank)+n(S.unassigned)}
+function wealth(){return avail()+n(S.investment)+n(S.other)}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function snap(){
+let d={date:today(),cash:n(S.cash),bank:n(S.bank),vuaa:n(S.investment),total:wealth(),goal:n(S.goal)};
+let i=S.snapshots.findIndex(x=>x.date===d.date);
+if(i<0)S.snapshots.push(d);else S.snapshots[i]=d;
+S.snapshots.sort((a,b)=>a.date.localeCompare(b.date));
+save();
+}
+function safe(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
 function render(){
-document.getElementById('savings').textContent=euro(savings);
-let pct=Math.min(100,savings/14000*100);
-document.getElementById('bar').style.width=pct+'%';
-document.getElementById('percentage').textContent=pct.toFixed(1)+'% completado';
-document.getElementById('remaining').textContent=euro(Math.max(0,14000-savings));
-document.getElementById('history').innerHTML=movements.length?movements.map(m=>'<div class="entry"><span>'+m.name+'<br><span class="muted">'+m.date+'</span></span><b style="color:'+(m.type==='income'?'#4ade80':'#f87171')+'">'+(m.type==='income'?'+':'-')+euro(m.value)+'</b></div>').join(''):'Todavía no hay movimientos.';
+let p=S.goal>0?Math.min(100,avail()/S.goal*100):0,left=Math.max(0,S.goal-avail()),profit=S.investment-S.cost;
+document.getElementById('total').textContent=eur(wealth());
+document.getElementById('available').textContent=eur(avail());
+document.getElementById('vuaa').textContent=eur(S.investment);
+document.getElementById('mercedesHome').textContent=eur(S.mercedes);
+document.getElementById('goalCurrent').textContent=eur(avail());
+document.getElementById('goalText').textContent='Objetivo: '+eur(S.goal)+' · solo efectivo y banco';
+document.getElementById('goalDateText').textContent=S.goalDate?new Date(S.goalDate+'T12:00:00').toLocaleDateString('es-ES',{month:'long',year:'numeric'}):'Sin fecha';
+document.getElementById('bar').style.width=p+'%';
+document.getElementById('pct').textContent=p.toFixed(1).replace('.',',')+'% completado';
+document.getElementById('left').textContent=left?('Faltan '+eur(left)):'¡Objetivo conseguido!';
+document.getElementById('cashHome').textContent=eur(S.cash);
+document.getElementById('bankHome').textContent=eur(S.bank);
+document.getElementById('sharesHome').textContent=n(S.shares).toLocaleString('es-ES',{maximumFractionDigits:8});
+document.getElementById('profitHome').textContent=(profit>=0?'+':'')+eur(profit);
+document.getElementById('unassignedHome').textContent=eur(S.unassigned);
+document.getElementById('today').textContent=new Date().toLocaleDateString('es-ES');
+document.getElementById('shares').textContent=n(S.shares).toLocaleString('es-ES',{maximumFractionDigits:8});
+document.getElementById('investment').textContent=eur(S.investment);
+document.getElementById('cost').textContent=eur(S.cost);
+document.getElementById('profit').textContent=(profit>=0?'+':'')+eur(profit);
+document.getElementById('profit').style.color=profit>=0?'var(--green)':'var(--red)';
+document.getElementById('history').innerHTML=S.movements.length?S.movements.slice().reverse().map(m=>'<div class="entry"><span>'+safe(m.name)+'<br><span class="muted">'+safe(m.date)+' · '+safe(m.accountLabel||'')+'</span></span><b style="color:'+(m.type==='income'?'var(--green)':m.type==='expense'?'var(--red)':'var(--blue)')+'">'+(m.type==='income'?'+':m.type==='expense'?'-':'↔')+eur(m.value)+'</b></div>').join(''):'Todavía no hay movimientos.';
+for(let [id,v] of Object.entries({goalInput:S.goal,goalDate:S.goalDate,mercedesInput:S.mercedes,mercedesDate:S.mercedesDate,cashInput:S.cash,bankInput:S.bank,unassignedInput:S.unassigned,sharesInput:S.shares,costInput:S.cost,manualValue:S.investment,otherInput:S.other}))document.getElementById(id).value=v;
+document.getElementById('snapCount').textContent=S.snapshots.length;
+draw();
 }
+
+function draw(){
+let c=document.getElementById('chart'),r=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1,w=Math.max(300,r.width),h=245;
+c.width=w*dpr;c.height=h*dpr;
+let x=c.getContext('2d');
+x.scale(dpr,dpr);x.clearRect(0,0,w,h);
+let a=S.snapshots.slice(-60);
+if(!a.length){x.fillStyle='#94a3b8';x.fillText('Sin registros todavía',12,25);return;}
+let vals=a.flatMap(d=>[d.cash,d.bank,d.vuaa,d.total,d.goal]),max=Math.max(100,...vals)*1.12,L=48,R=8,T=12,B=30,pw=w-L-R,ph=h-T-B;
+x.font='10px sans-serif';x.fillStyle='#94a3b8';x.strokeStyle='#334155';
+for(let i=0;i<=4;i++){
+let y=T+ph*i/4;
+x.beginPath();x.moveTo(L,y);x.lineTo(w-R,y);x.stroke();
+x.fillText(Math.round(max*(1-i/4)).toLocaleString('es-ES'),2,y+3);
+}
+let xx=i=>a.length===1?L+pw/2:L+pw*i/(a.length-1);
+[{k:'cash',c:'#4ade80',w:1.8},{k:'bank',c:'#60a5fa',w:1.8},{k:'vuaa',c:'#c084fc',w:1.8},{k:'total',c:'#facc15',w:2.8},{k:'goal',c:'#fb923c',w:1.5}].forEach(s=>{
+x.beginPath();x.strokeStyle=s.c;x.lineWidth=s.w;
+a.forEach((d,i)=>{
+let y=T+ph-(n(d[s.k])/max)*ph;
+i?x.lineTo(xx(i),y):x.moveTo(xx(i),y);
+});
+x.stroke();
+});
+x.fillStyle='#94a3b8';x.fillText(a[0].date.slice(5),L,h-8);
+x.textAlign='right';x.fillText(a[a.length-1].date.slice(5),w-R,h-8);x.textAlign='left';
+}
+
+function balances(){
+let c=Number(cashInput.value),b=Number(bankInput.value),u=Number(unassignedInput.value);
+if([c,b,u].some(v=>!Number.isFinite(v)||v<0))return alert('Revisa los saldos.');
+S.cash=c;S.bank=b;S.unassigned=u;snap();render();alert('Saldos guardados.');
+}
+
 function add(){
-let type=document.getElementById('type').value;
-let name=document.getElementById('concept').value.trim();
-let value=Number(document.getElementById('amount').value);
-if(!name||!Number.isFinite(value)||value<=0){alert('Introduce un concepto y una cantidad válida.');return}
-if(type==='expense'&&value>savings){alert('No tienes suficiente ahorro registrado.');return}
-savings+=type==='income'?value:-value;
-movements.unshift({type,name,value,date:new Date().toLocaleDateString('es-ES')});
-localStorage.setItem('jhp',JSON.stringify({savings,movements}));
-document.getElementById('concept').value='';
-document.getElementById('amount').value='';
-render();
+let type=document.getElementById('type').value,acc=document.getElementById('account').value,target=document.getElementById('target').value,name=concept.value.trim(),v=Number(amount.value);
+if(!name||!Number.isFinite(v)||v<=0)return alert('Introduce concepto y cantidad válidos.');
+let label=acc==='cash'?'Efectivo':'Banco';
+if(type==='transfer'){
+if(acc===target)return alert('Selecciona cuentas diferentes.');
+if(n(S[acc])<v)return alert('Saldo insuficiente en origen.');
+S[acc]-=v;S[target]+=v;
+S.movements.push({type,name,value:v,date:today(),accountLabel:label+' → '+(target==='cash'?'Efectivo':'Banco')});
+}else{
+if(type==='expense'&&n(S[acc])<v)return alert('Saldo insuficiente en esa cuenta.');
+S[acc]+=type==='income'?v:-v;
+S.movements.push({type,name,value:v,date:today(),accountLabel:label});
 }
-try{let saved=JSON.parse(localStorage.getItem('jhp'));if(saved){savings=saved.savings;movements=saved.movements||[]}}catch(e){}
-render();
+concept.value='';amount.value='';snap();render();
+}
+
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{
+document.querySelectorAll('[data-tab]').forEach(z=>z.classList.toggle('active',z===b));
+document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===b.dataset.tab));
+if(b.dataset.tab==='grafica')draw();
+});
+
+type.onchange=()=>targetWrap.style.display=type.value==='transfer'?'block':'none';
+document.getElementById('add').onclick=add;
+document.getElementById('saveBalances').onclick=balances;
+
+document.getElementById('saveGoal').onclick=()=>{
+let g=Number(goalInput.value);
+if(!Number.isFinite(g)||g<=0)return alert('Objetivo no válido.');
+S.goal=g;S.goalDate=goalDate.value;snap();render();alert('Objetivo actualizado.');
+};
+
+document.getElementById('saveMercedes').onclick=()=>{
+let m=Number(mercedesInput.value);
+if(!Number.isFinite(m)||m<0)return alert('Importe no válido.');
+S.mercedes=m;S.mercedesDate=mercedesDate.value;save();render();alert('Previsión guardada.');
+};
+
+document.getElementById('saveInvestment').onclick=()=>{
+let sh=Number(sharesInput.value),co=Number(costInput.value),val=Number(manualValue.value);
+if([sh,co,val].some(v=>!Number.isFinite(v)||v<0))return alert('Revisa los datos.');
+S.shares=sh;S.cost=co;S.investment=val;S.quote=sh?val/sh:0;snap();render();
+quoteStatus.textContent='Valor de posición actualizado manualmente.';
+};
+
+document.getElementById('saveOther').onclick=()=>{
+let v=Number(otherInput.value);
+if(!Number.isFinite(v)||v<0)return alert('Importe no válido.');
+S.other=v;snap();render();
+};
+
+document.getElementById('redraw').onclick=()=>{snap();render();};
+document.getElementById('updateQuote').onclick=updateQuote;
+
+async function updateQuote(){
+let el=document.getElementById('quoteStatus');
+el.textContent='Consultando precio público de VUAA…';
+try{
+let res=await fetch('https://query1.finance.yahoo.com/v8/finance/chart/VUAA.DE?range=5d&interval=1d',{cache:'no-store'});
+if(!res.ok)throw Error('HTTP '+res.status);
+let j=await res.json(),m=j.chart?.result?.[0]?.meta,p=Number(m?.regularMarketPrice);
+if(!p||!Number.isFinite(p))throw Error('Sin precio válido');
+S.quote=p;S.investment=S.shares*p;snap();render();
+el.textContent='Cotización consultada en Yahoo Finance · '+new Date().toLocaleString('es-ES')+' · '+eur(p)+' por participación. Puede diferir de Revolut.';
+}catch(e){
+el.textContent='No se pudo consultar automáticamente (el proveedor puede bloquear consultas desde la web). Se conserva el último valor: '+eur(S.investment)+'. Puedes actualizarlo manualmente.';
+}
+}
+
+document.getElementById('export').onclick=()=>{
+let blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'}),a=document.createElement('a');
+a.href=URL.createObjectURL(blob);a.download='jhp-finance-backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href);
+};
+
+document.getElementById('import').onclick=()=>{
+let f=importFile.files[0];
+if(!f)return alert('Selecciona un archivo JSON.');
+let rd=new FileReader();
+rd.onload=()=>{
+try{S={...base,...JSON.parse(rd.result)};snap();render();alert('Copia restaurada.');}
+catch(e){alert('Archivo no válido.');}
+};
+rd.readAsText(f);
+};
+
+window.addEventListener('resize',draw);
+snap();render();updateQuote();
 </script>
 </body>
 </html>
